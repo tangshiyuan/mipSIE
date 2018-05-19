@@ -169,7 +169,7 @@ class LIS3MDL(I2C):
     def getLISTemperatureRaw(self):
         """ Return the raw temperature value. """
         # Check if device has been set up
-        if not self.tempEnabled:
+        if not self.lisTempEnabled:
             raise(Exception('Temperature sensor has to be enabled first'))
 
         # Return raw sensor data

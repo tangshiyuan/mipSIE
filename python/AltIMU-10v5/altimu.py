@@ -170,10 +170,16 @@ class AltIMU(LIS3MDL, LPS25H, LSM6DS33):
         #    self.initComplementaryFromAccel = False
 
         # Calculate complementary filtered angles
+        #self.complementaryAngles = [None if (gyrRates[i] is None or accelAngles[i] is None)
+        #    else self.C_FILTER_CONST * (self.complementaryAngles[i] + gyrRates[i] * deltaT)
+        #    + (1 - self.C_FILTER_CONST) * accelAngles[i]
+        #    for i in range(3)]
+        self.complementaryAngles = list(accelAngles)
         self.complementaryAngles = [None if (gyrRates[i] is None or accelAngles[i] is None)
-            else self.C_FILTER_CONST * (self.complementaryAngles[i] + gyrRates[i] * deltaT)
-            + (1 - self.C_FILTER_CONST) * accelAngles[i]
+            else C_FILTER_CONST * (self.complementaryAngles[i] + gyrRates[i] * deltaT)
+            + (1 - C_FILTER_CONST) * accelAngles[i]
             for i in range(3)]
+
 
         # Return vector
         return tuple(self.complementaryAngles)
@@ -239,7 +245,13 @@ class AltIMU(LIS3MDL, LPS25H, LSM6DS33):
         #if self.initKalmanFromAccel:
         #    self.kalmanAngles = list(accelAngles)
         #    self.initKalmanFromAccel = False
+        
+        # Added by SY
+        self.kalmanX = accAngleX
+        self.kalmanY = accAngleY
+        self.kalmanZ = accAngleZ
 
+        
         # X axis
         (self.kalmanXP_00,
          self.kalmanXP_01,
